@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SITTA - Manajemen Stok Bahan Ajar</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+
+    <header class="navigation-bar">
+        <nav class="nav-links">
+            <a href="index.html" class="nav-item">HOME</a>
+            <a href="stok.html" class="nav-item">Halaman Stok</a>
+            <a href="tracking.html" class="nav-item">Tracking DO</a>
+        </nav>
+    </header>
+
+    <main class="stok-container" id="stokApp">
+        <h2>Halaman Stok Bahan Ajar</h2>
+        <p>Sistem informasi monitoring persediaan modul bahan ajar Universitas Terbuka.</p>
+
+        <div class="add-area" style="background: #ffffff; padding: 20px; border-radius: 4px; margin-bottom: 20px; border: 1px solid #cccccc;">
+            <h3 style="margin-top: 0; margin-bottom: 15px;">Tambah Bahan Ajar Baru</h3>
+            <form @submit.prevent="addBahanAjar" style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
+                
+                <input type="text" v-model="newBahanAjar.judul" placeholder="Nama Mata Kuliah" style="padding: 8px; border-radius: 4px; border: 1px solid #cccccc; flex: 1; min-width: 200px;">
+                
+                <select v-model="newBahanAjar.kategori" style="padding: 8px; border-radius: 4px; border: 1px solid #cccccc;">
+                    <option value="" disabled selected>Pilih Kategori</option>
+                    <option v-for="kat in upbjjListKategori" :key="kat" v-if="kat !== 'Semua Kategori'" :value="kat">{{ kat }}</option>
+                </select>
+
+                <select v-model="newBahanAjar.upbjj" style="padding: 8px; border-radius: 4px; border: 1px solid #cccccc;">
+                    <option value="" disabled selected>Pilih UT-Daerah</option>
+                    <option v-for="daerah in upbjjListDaerah" :key="daerah" v-if="daerah !== 'Semua UT-Daerah'" :value="daerah">{{ daerah }}</option>
+                </select>
+
+                <input type="text" v-model="newBahanAjar.lokasiRak" placeholder="Lokasi Rak" style="padding: 8px; border-radius: 4px; border: 1px solid #cccccc; width: 120px;">
+                <input type="number" v-model.number="newBahanAjar.qty" placeholder="Stok" style="padding: 8px; border-radius: 4px; border: 1px solid #cccccc; width: 90px;" min="0">
+                <input type="number" v-model.number="newBahanAjar.safety" placeholder="Safety Stock" style="padding: 8px; border-radius: 4px; border: 1px solid #cccccc; width: 110px;" min="0">
+                
+                <button type="submit" style="background: #e91e63; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Tambah Data</button>
+            </form>
+        </div>
+
+        <div class="filter-panel" style="background: #fdfdfdfd; padding: 20px; border-radius: 4px; margin-bottom: 20px; border: 1px solid #dddddd;">
+            <h3 style="margin-top: 0; margin-bottom: 15px; color: #333333; font-size: 1rem;">Filter & Pengurutan Data</h3>
+            
+            <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center;">
+                <div>
+                    <label style="display: block; margin-bottom: 5px; font-size: 0.85rem;">UT-Daerah:</label>
+                    <select v-model="selectedUpbjj" style="padding: 8px; border-radius: 4px; border: 1px solid #cccccc; width: 220px;">
+                        <option value="Semua">Semua UT-Daerah</option>
+                        <option v-for="daerah in upbjjListDaerah" :key="daerah" :value="daerah">{{ daerah }}</option>
+                    </select>
+                </div>
+
+                <div v-if="selectedUpbjj !== 'Semua'">
+                    <label style="display: block; margin-bottom: 5px; font-size: 0.85rem;">Kategori Mata Kuliah:</label>
+                    <select v-model="selectedKategori" style="padding: 8px; border-radius: 4px; border: 1px solid #cccccc; width: 220px;">
+                        <option value="Semua">Semua Kategori</option>
+                        <option v-for="kat in upbjjListKategori" :key="kat" :value="kat">{{ kat }}</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 5px; font-size: 0.85rem;">Urutkan Berdasarkan:</label>
+                    <select v-model="sortBy" style="padding: 8px; border-radius: 4px; border: 1px solid #cccccc; width: 220px;">
+                        <option value="judul">Judul Mata Kuliah</option>
+                        <option value="stock">Jumlah Stok (Qty)</option>
+                        <option value="harga">Harga Bahan Ajar</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eeeeee; padding-top: 15px;">
+                <label style="cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 0.9rem;">
+                    <input type="checkbox" v-model="filterReorderOnly"> Tampilkan Daftar Re-Order Saja (Stok &lt; Safety Stock / Stok = 0)
+                </label>
+                
+                <button type="button" @click="resetSemuaFilter" style="background: #f0f0f0; color: #333333; padding: 8px 15px; border: 1px solid #cccccc; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">
+                    Reset Filter
+                </button>
+            </div>
+        </div>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Kode / Judul MK</th>
+                    <th>Kategori</th>
+                    <th>UT Daerah</th>
+                    <th>Lokasi Rak</th>
+                    <th>Jumlah Stok (qty)</th>
+                    <th>Safety</th>
+                    <th>Status</th>
+                    <th>Catatan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in filteredAndSortedStok" :key="item.kode">
+                    <td><strong>{{ item.kode }}</strong> - {{ item.judul }}</td>
+                    <td>{{ item.kategori }}</td>
+                    <td>{{ item.upbjj }}</td>
+                    <td>{{ item.lokasiRak || '-' }}</td>
+                    
+                    <td>
+                        <input v-model.number="item.qty" type="number" min="0" style="width: 65px; padding: 5px; text-align: center; border-radius: 4px; border: 1px solid #cccccc;">
+                    </td>
+
+                    <td>{{ item.safety }}</td>
+                    
+                    <td>
+                        <span :class="evaluasiStatusClass(item.qty, item.safety)" style="font-weight: bold;">
+                            {{ evaluasiStatusTeks(item.qty, item.safety) }}
+                        </span>
+                    </td>
+                    
+                    <td v-html="item.catatanHTML || '-'"></td>
+                </tr>
+                
+                <tr v-if="filteredAndSortedStok.length === 0">
+                    <td colspan="8" style="text-align: center; color: #777777; padding: 30px; font-style: italic;">
+                        Tidak ada data bahan ajar yang memenuhi kriteria filter.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <script src="js/dataBahanAjar (1).js"></script>
+    <script src="js/stok-app.js"></script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracking Delivery Order</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+
+<body>
+    <header class="navigation-bar">
+        <a href="index.html" class="nav-item">HOME</a>
+    </header>
+
+    <main class="tracking-container" id="trackingApp">
+        <h2>Tracking Delivery Order (DO)</h2>
+
+        <div class="add-area">
+            <h3>Input Delivery Order Baru</h3>
+            <form @submit.prevent="addTrackingDO">
+
+                <label>Nomor DO (Otomatis):</label>
+                <input type="text" :value="generateNoDO" readonly>
+
+                <input type="text" v-model="newDO.nim" placeholder="NIM" required>
+                <input type="text" v-model="newDO.nama" placeholder="Nama Mahasiswa" required>
+
+                <label for="ekspedisi">Ekspedisi:</label>
+                <select v-model="newDO.ekspedisi" id="ekspedisi" required>
+                    <option v-for="eks in ekspedisiList" :value="eks.nama">{{ eks.nama }}</option>
+                </select>
+
+                <button type="submit">Tambah Delivery Order</button>
+            </form>
+        </div>
+
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nomor DO</th>
+                    <th>NIM/Nama</th>
+                    <th>Ekspedisi</th>
+                    <th>Tanggal Kirim</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in trackingList" :key="item.noDO">
+                    <td>{{ item.noDO }}</td>
+                    <td>{{ item.nim }} / {{ item.nama }}</td>
+                    <td>{{ item.ekspedisi }}</td>
+                    <td>{{ item.tanggalKirim }}</td>
+                    <td>{{ item.status }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <script src="js/dataBahanAjar (1).js"></script>
+    <script src="js/tracking-app.js"></script>
+</body>
+</html>

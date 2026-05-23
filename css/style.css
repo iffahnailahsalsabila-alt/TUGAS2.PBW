@@ -1,0 +1,170 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fce4ec; /* Latar belakang */
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    color: #424242; /* Warna teks utama */
+}
+
+main {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(233, 30, 99, 0.1);
+}
+
+h2 {
+    color: #e91e63;
+    border-bottom: 2px solid #fce4ec;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.navigation-bar {
+    background-color: #e91e63;
+    color: white;
+    padding: 0 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+}
+
+.nav-links {
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-item {
+    display: block;
+    padding: 15px 20px;
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.nav-item:hover {
+    background-color: #c2185b;
+}
+
+.add-area form, .filter-group {
+    background-color: #fff8fb;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #fce4ec;
+}
+
+input[type="text"], input[type="number"], input[type="date"], select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0 15px 0;
+    display: inline-block;
+    border: 1px solid #f06292;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button[type="submit"], .reset-btn {
+    background-color: #e91e63;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover, .reset-btn:hover {
+    background-color: #c2185b;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.data-table th {
+    background-color: #f06292;
+    color: white;
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.data-table td {
+    border: 1px solid #fce4ec;
+    padding: 10px;
+    vertical-align: middle;
+}
+
+.data-table tr:nth-child(even) {
+    background-color: #fffafc;
+}
+
+.data-table tr:hover {
+    background-color: #ffeff7;
+}
+
+/* untuk detail Stok */
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 15px;
+    border-bottom: 1px solid #fce4ec;
+}
+
+.detail-label {
+    font-weight: bold;
+    color: #666;
+    min-width: 150px;
+    text-align: left;
+}
+
+.detail-label::after {
+    content: ": ";
+}
+
+.status-aman {
+    font-weight: bold;
+    color: #4CAF50;
+    padding: 3px 6px;
+    border-radius: 3px;
+    background-color: #e8f5e9;
+}
+
+.status-menipis {
+    font-weight: bold;
+    color: #FF9800;
+    padding: 3px 6px;
+    border-radius: 3px;
+    background-color: #fff3e0;
+}
+
+.status-kosong {
+    font-weight: bold;
+    color: #F44336;
+    padding: 3px 6px;
+    border-radius: 3px;
+    background-color: #ffebee;
+}
+
+/* untuk input edit di tabel */
+.data-table input[type="number"] {
+    padding: 5px;
+    margin: 0;
+    border: 1px solid #e91e63;
+    width: 50px;
+}
+
+/* untuk pesan error (validasi) */
+.error-msg {
+    color: #F44336;
+    font-weight: bold;
+    margin-top: 10px;
+}
