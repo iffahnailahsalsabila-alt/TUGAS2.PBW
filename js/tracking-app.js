@@ -1,7 +1,7 @@
 new Vue({
     el: '#trackingApp',
     data: {
-        // Mengambil nama KEY asli ("DO2025-0001") langsung tanpa pemotongan digit angka
+        // Mengambil nama KEY asli ("DO2025-0001") langsung 
         trackingList: Object.keys(dataTracking).map(key => {
             return {
                 noDO: key, 
@@ -30,7 +30,7 @@ new Vue({
             return paketKetemu ? paketKetemu.isi : null;
         },
 
-        // Generasi otomatis kode running DO nomor urut (Format 4 digit sesuai data awal: DO2026-0002)
+        // Generasi otomatis kode running DO nomor urut (Format 4 digit: DO2026-0002)
         generateNoDO() {
             const currentYear = new Date().getFullYear();
             const sequence = this.trackingList.length + 1;
